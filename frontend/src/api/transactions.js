@@ -9,3 +9,6 @@ export const fetchTransactions = () =>
 
 export const createTransaction = (data) =>
     API.post("/transactions", data);
+
+export const fetchTransactions = (page = 1) =>
+    API.get(`/transactions?page=${page}&limit=10`);
