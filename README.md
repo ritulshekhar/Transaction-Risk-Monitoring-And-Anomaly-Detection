@@ -1,4 +1,4 @@
-# Transaction Risk Analysis and Anomaly Detection
+# Transaction Risk Monitoring and Anomaly Detection
 
 A production-grade fintech transaction risk monitoring system with ML-based anomaly detection, audit logging, and model versioning.
 
@@ -10,7 +10,7 @@ A production-grade fintech transaction risk monitoring system with ML-based anom
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
@@ -26,7 +26,7 @@ A production-grade fintech transaction risk monitoring system with ML-based anom
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## Quick Start (Local Development)
 
 ### Prerequisites
 - Node.js 20+
@@ -85,7 +85,7 @@ npm run dev
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ├── backend/               # Node.js Express API
@@ -112,7 +112,7 @@ npm run dev
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Backend (Port 5000)
 
@@ -135,7 +135,7 @@ npm run dev
 
 ---
 
-## 🔧 Environment Variables
+## Environment Variables
 
 ### Backend
 | Variable | Description | Default |
@@ -155,7 +155,7 @@ No environment variables required. Model path is relative.
 
 ---
 
-## 📊 ML Model
+## ML Model
 
 The system uses **Isolation Forest** for unsupervised anomaly detection.
 
@@ -186,7 +186,7 @@ dvc repro
 
 ---
 
-## 🚢 Deployment
+## Deployment
 
 ### Backend & ML → Render
 
@@ -212,7 +212,7 @@ Or use the Blueprint:
 
 ---
 
-## 🔒 Security
+## Security
 
 - CORS configured for specific origins
 - Input validation on all endpoints
@@ -222,7 +222,7 @@ Or use the Blueprint:
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Backend
 ```bash
@@ -238,6 +238,6 @@ pytest test_predict.py
 
 ---
 
-## 📝 License
+## License
 
 ISC
