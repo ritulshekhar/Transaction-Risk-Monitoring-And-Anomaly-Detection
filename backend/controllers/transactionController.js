@@ -1,13 +1,27 @@
 const Transaction = require("../models/Transaction");
-const { calculateRiskScore } = require("../services/riskService");
+const { getRiskFromML } = require("../services/mlService");
+const { logAction } = require("../services/auditService");
 
 exports.createTransaction = async (req, res) => {
-    const riskScore = calculateRiskScore(req.body.amount);
+    try {
+        // 1. Call ML service
+        const mlResult = await getRiskFromML(req.body);
 
-    const tx = await Transaction.create({
-        ...req.body,
-        riskScore
-    });
+        // 2. Persist transaction
+        const tx = await Transaction.create({
+            ...req.body,
+            riskScore: mlResult.riskScore
+        });
 
-    res.json(tx);
+        // 3. Audit log AFTER successful write
+        await logAction("CREATE_TRANSACTION", {
+            transactionId: tx._id,
+            riskScore: tx.riskScore
+        });
+
+        // 4. Respond
+        res.status(201).json(tx);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };

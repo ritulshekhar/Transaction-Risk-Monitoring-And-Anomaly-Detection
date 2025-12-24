@@ -1,14 +1,9 @@
 const mongoose = require("mongoose");
 
-module.exports = mongoose.model("AuditLog", {
-    action: String,
-    timestamp: Date,
-    metadata: Object
+const AuditLogSchema = new mongoose.Schema({
+    action: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now },
+    metadata: { type: Object }
 });
-const AuditLog = require("../models/AuditLog");
 
-await AuditLog.create({
-    action: "CREATE_TRANSACTION",
-    timestamp: new Date(),
-    metadata: tx
-});
+module.exports = mongoose.model("AuditLog", AuditLogSchema);
