@@ -1,6 +1,9 @@
-const router = require("express").Router();
-const controller = require("../controllers/transactionController");
+// routes/transactions.js
+const { body } = require("express-validator");
 
-router.post("/", controller.createTransaction);
-
-module.exports = router;
+router.post(
+    "/",
+    body("amount").isNumeric(),
+    body("userId").notEmpty(),
+    controller.createTransaction
+);

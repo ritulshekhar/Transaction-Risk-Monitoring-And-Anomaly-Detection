@@ -1,0 +1,9 @@
+stages:
+  train:
+    cmd: python ml/train.py
+    deps:
+      - data/transactions.csv
+    params:
+      - model.contamination
+    outs:
+      - models/model.pkl

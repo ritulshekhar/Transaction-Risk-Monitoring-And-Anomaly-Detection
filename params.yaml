@@ -1,0 +1,3 @@
+# params.yaml
+model:
+  contamination: 0.05
