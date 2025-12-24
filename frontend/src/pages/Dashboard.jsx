@@ -10,24 +10,70 @@ export default function Dashboard() {
     const [transactions, setTransactions] = useState([]);
     const [model, setModel] = useState({});
     const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [total, setTotal] = useState(0);
     const [highRiskOnly, setHighRiskOnly] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [modelLoading, setModelLoading] = useState(true);
+    const [error, setError] = useState(null);
 
+    // Fetch transactions when page or filter changes
     useEffect(() => {
-        fetchTransactions(page).then(res => setTransactions(res.data));
-        fetchModelInfo().then(res => setModel(res.data));
-    }, [page]);
+        setLoading(true);
+        setError(null);
 
-    const filtered = highRiskOnly
-        ? transactions.filter(tx => tx.riskScore > 0.7)
-        : transactions;
+        fetchTransactions(page, 10, highRiskOnly)
+            .then((res) => {
+                setTransactions(res.data.transactions || []);
+                setTotalPages(res.data.pages || 1);
+                setTotal(res.data.total || 0);
+            })
+            .catch((err) => {
+                console.error("Failed to fetch transactions:", err);
+                setError("Failed to load transactions. Is the backend running?");
+            })
+            .finally(() => setLoading(false));
+    }, [page, highRiskOnly]);
+
+    // Fetch model info once on mount
+    useEffect(() => {
+        fetchModelInfo()
+            .then((res) => setModel(res.data))
+            .catch((err) => console.error("Failed to fetch model info:", err))
+            .finally(() => setModelLoading(false));
+    }, []);
+
+    // Reset to page 1 when filter changes
+    useEffect(() => {
+        setPage(1);
+    }, [highRiskOnly]);
 
     return (
-        <div>
-            <h2>Transaction Risk Dashboard</h2>
-            <ModelInfo model={model} />
-            <Filters highRiskOnly={highRiskOnly} setHighRiskOnly={setHighRiskOnly} />
-            <TransactionTable data={filtered} />
-            <Pagination page={page} setPage={setPage} total={100} />
+        <div className="container">
+            <h2>🛡️ Transaction Risk Dashboard</h2>
+
+            <ModelInfo model={model} loading={modelLoading} />
+
+            <Filters
+                highRiskOnly={highRiskOnly}
+                setHighRiskOnly={setHighRiskOnly}
+            />
+
+            {error ? (
+                <div className="card" style={{ color: "var(--accent-red)" }}>
+                    {error}
+                </div>
+            ) : (
+                <>
+                    <TransactionTable data={transactions} loading={loading} />
+                    <Pagination
+                        page={page}
+                        setPage={setPage}
+                        totalPages={totalPages}
+                        total={total}
+                    />
+                </>
+            )}
         </div>
     );
 }

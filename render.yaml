@@ -1,0 +1,48 @@
+# Render Blueprint - Backend & ML Service Deployment
+# https://render.com/docs/blueprint-spec
+
+services:
+  # Backend API
+  - type: web
+    name: risk-backend
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci --only=production
+    startCommand: node index.js
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false  # Set manually in dashboard
+      - key: ML_SERVICE_URL
+        fromService:
+          name: risk-ml-service
+          type: web
+          property: host
+      - key: FRONTEND_URL
+        sync: false  # Set to your Vercel URL
+
+  # ML Service (FastAPI)
+  - type: web
+    name: risk-ml-service
+    runtime: docker
+    region: oregon
+    plan: free
+    rootDir: ml
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    disk:
+      name: ml-models
+      mountPath: /app/models
+      sizeGB: 1
+
+# Note: Use MongoDB Atlas for production database
+# Create a free cluster at https://www.mongodb.com/cloud/atlas

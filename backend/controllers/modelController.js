@@ -1,5 +1,6 @@
 const { getModelInfo } = require("../services/modelService");
 
-exports.fetchModelInfo = (req, res) => {
-    res.json(getModelInfo());
+exports.fetchModelInfo = async (req, res) => {
+    const info = await getModelInfo();
+    res.json(info);
 };
